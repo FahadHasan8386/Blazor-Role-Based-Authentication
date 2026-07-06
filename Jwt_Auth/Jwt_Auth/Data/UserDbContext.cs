@@ -6,5 +6,6 @@ namespace Jwt_Auth.Data
     public class UserDbContext(DbContextOptions<UserDbContext> options) : DbContext(options)
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<MQ136Sensor> MQ136Sensors { get; set; }
     }
 }
