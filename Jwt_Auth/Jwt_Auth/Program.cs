@@ -39,6 +39,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 // Dependency Injection
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IMQ136SensorService, MQ136SensorService>();
 
 var app = builder.Build();
 
