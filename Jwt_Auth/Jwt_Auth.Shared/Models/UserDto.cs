@@ -1,4 +1,4 @@
-﻿namespace Jwt_Auth.Models
+﻿namespace Jwt_Auth.Shared.Models
 {
     public class UserDto
     {
