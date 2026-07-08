@@ -1,4 +1,5 @@
 ﻿using Jwt_Auth.Shared.Models;
+using Jwt_Auth.Web.Pages;
 using System.Net.Http.Json;
 
 namespace Jwt_Auth.Web.Services
@@ -12,13 +13,13 @@ namespace Jwt_Auth.Web.Services
             _http = http;   
         }
 
-        public async Task<List<MQ136Service>> GetAllAsync()
+        public async Task<List<MQ136Sensor>> GetAllAsync()
         {
-            var result = await _http.GetFromJsonAsync<List<MQ136Service>>("appi/MQ136Sensor");
+            var result = await _http.GetFromJsonAsync<List<MQ136Sensor>>("api/MQ136Sensor");
 
-            return result ?? new List<MQ136Service>();
+            return result ?? new List<MQ136Sensor>();
         }
-
+             
         public async Task<bool> AddAsync(MQ136SensorDto dto)
         {
             var response = await _http.PostAsJsonAsync("api/MQ136Sensor", dto);

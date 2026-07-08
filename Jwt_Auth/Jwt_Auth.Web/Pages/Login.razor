@@ -1,5 +1,65 @@
-﻿<h3>Login</h3>
+﻿@page "/login"
+@using Jwt_Auth.Shared.Models
+@using Jwt_Auth.Web.Services
+@inject AuthService AuthService
+
+@inject NavigationManager Navigation
+
+
+<h3>Login</h3>
+
+<EditForm Model="model" OnValidSubmit="Login">
+
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+
+        <label>Username</label>
+
+        <InputText class="form-control"
+                   @bind-Value="model.UserName" />
+
+    </div>
+
+    <div class="mb-3">
+
+        <label>Password</label>
+
+        <InputText class="form-control"
+                   Type="password"
+                   @bind-Value="model.Password" />
+
+    </div>
+
+    <button class="btn btn-primary">
+        Login
+    </button>
+
+</EditForm>
+
+@if (!string.IsNullOrWhiteSpace(error))
+{
+    <p class="text-danger mt-2">@error</p>
+}
 
 @code {
+
+    private UserDto model = new();
+
+    private string error = "";
+
+    private async Task Login()
+    {
+        var result = await AuthService.Login(model);
+
+        if (result)
+        {
+            Navigation.NavigateTo("/", true);
+        }
+        else
+        {
+            error = "Invalid Username or Password";
+        }
+    }
 
 }

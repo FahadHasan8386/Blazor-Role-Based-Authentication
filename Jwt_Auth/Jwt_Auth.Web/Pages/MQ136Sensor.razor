@@ -1,5 +1,122 @@
-﻿<h3>MQ136Sensor</h3>
+﻿@page "/mq136"
+
+@using Jwt_Auth.Web.Services
+@using Jwt_Auth.Shared.Models
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize(Roles = "Admin")]
+
+@inject MQ136Service MQ136Service
+
+<h3>MQ136 Sensor Dashboard</h3>
+
+<hr />
+
+<div class="card p-3 mb-3">
+
+    <h5>Add New Reading</h5>
+
+    <div class="mb-3">
+
+        <label>H2S Level</label>
+
+        <InputNumber class="form-control"
+                     @bind-Value="sensorDto.H2SLevel" />
+
+    </div>
+
+    <button class="btn btn-success"
+            @onclick="Save">
+        Add
+    </button>
+
+</div>
+
+@if (sensors == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table table-striped">
+
+        <thead>
+
+            <tr>
+
+                <th>ID</th>
+
+                <th>H2S Level</th>
+
+                <th>Action</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            @foreach (var item in sensors)
+            {
+                <tr>
+
+                    <td>@item.Id</td>
+
+                    <td>@item.H2SLevel</td>
+
+                    <td>
+
+                        <button class="btn btn-danger btn-sm"
+                                @onclick="() => Delete(item.Id)">
+                            Delete
+                        </button>
+
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+}
 
 @code {
+
+    private List<MQ136Sensor> sensors = new();
+
+    private MQ136SensorDto sensorDto = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        sensors = await MQ136Service.GetAllAsync();
+    }
+
+    private async Task Save()
+    {
+        var success = await MQ136Service.AddAsync(sensorDto);
+
+        if (success)
+        {
+            sensorDto = new MQ136SensorDto();
+
+            await LoadData();
+        }
+    }
+
+    private async Task Delete(long id)
+    {
+        var success = await MQ136Service.DeleteAsync(id);
+
+        if (success)
+        {
+            await LoadData();
+        }
+    }
 
 }
