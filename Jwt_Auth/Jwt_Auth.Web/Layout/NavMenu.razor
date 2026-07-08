@@ -1,0 +1,46 @@
+﻿@using Jwt_Auth.Web.Services
+@inject NavigationManager Navigation
+
+<div class="nav flex-column">
+
+    <NavLink href="/" Match="NavLinkMatch.All">
+        🏠 Home
+    </NavLink>
+
+    <AuthorizeView>
+
+        <Authorized>
+
+            <NavLink href="/mq136">
+                📊 MQ136 Sensor
+            </NavLink>
+
+            <button class="btn btn-danger mt-2"
+                    @onclick="Logout">
+                Logout
+            </button>
+
+        </Authorized>
+
+        <NotAuthorized>
+
+            <NavLink href="/login">
+                🔑 Login
+            </NavLink>
+
+        </NotAuthorized>
+
+    </AuthorizeView>
+
+</div>
+
+@code{
+
+    private async Task Logout()
+    {
+        //await AuthService.Logout();
+
+        Navigation.NavigateTo("/login", true);
+    }
+
+}
