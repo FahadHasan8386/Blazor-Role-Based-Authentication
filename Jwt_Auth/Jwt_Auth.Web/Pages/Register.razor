@@ -1,5 +1,172 @@
-﻿<h3>Register</h3>
+﻿@page "/register"
+
+@using Jwt_Auth.Shared.Models
+@using Jwt_Auth.Web.Services
+
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-5 col-md-7">
+
+
+            <div class="card shadow-lg border-0">
+
+
+                <div class="card-body p-5">
+
+
+                    <div class="text-center mb-4">
+
+                        <h2 class="fw-bold text-primary">
+                            Create Account 🚀
+                        </h2>
+
+                        <p class="text-muted">
+                            Join AtmoSync ArgoAi
+                        </p>
+
+                    </div>
+
+
+
+                    @if (!string.IsNullOrEmpty(Message))
+                    {
+                        <div class="alert alert-success">
+                            @Message
+                        </div>
+                    }
+
+
+
+                    @if (!string.IsNullOrEmpty(ErrorMessage))
+                    {
+                        <div class="alert alert-danger">
+                            @ErrorMessage
+                        </div>
+                    }
+
+
+
+                    <EditForm Model="model"
+                              OnValidSubmit="HandleRegister">
+
+
+                        <DataAnnotationsValidator />
+
+
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Username
+                            </label>
+
+
+                            <InputText class="form-control"
+                                       @bind-Value="model.UserName"
+                                       placeholder="Enter username" />
+
+                        </div>
+
+
+
+
+                        <div class="mb-4">
+
+                            <label class="form-label">
+                                Password
+                            </label>
+
+
+                            <InputText class="form-control"
+                                       type="password"
+                                       @bind-Value="model.Password"
+                                       placeholder="Enter password" />
+
+                        </div>
+
+
+
+                        <button class="btn btn-primary w-100"
+                                disabled="@Loading">
+
+
+                            @if (Loading)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2"></span>
+                            }
+
+                            Register
+
+                        </button>
+                    </EditForm>
+
+                    <div class="text-center mt-4">
+                        <span class="text-muted">
+                            Already have an account?
+                        </span>
+                        <NavLink href="/login">
+                            Login
+                        </NavLink>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
 
 @code {
 
+    private UserDto model = new();
+    private string Message = "";
+
+    private string ErrorMessage = "";
+
+    private bool Loading = false;
+
+    private async Task HandleRegister()
+    {
+
+        try
+        {
+
+            Loading = true;
+
+            Message = "";
+            ErrorMessage = "";
+
+            var result = await AuthService.Register(model);
+
+            if (result)
+            {
+                Message = "Registration successful. Redirecting...";
+
+                await Task.Delay(1000);
+
+                Navigation.NavigateTo("/login");
+            }
+            else
+            {
+                ErrorMessage = "Username already exists";
+            }
+
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            Loading = false;
+        }
+    }
 }
