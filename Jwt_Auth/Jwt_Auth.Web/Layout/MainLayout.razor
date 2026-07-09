@@ -1,21 +1,143 @@
 ﻿@inherits LayoutComponentBase
 
+@using Microsoft.AspNetCore.Components.Authorization
+
+
+
 <div class="page">
 
-    <div class="sidebar">
-        <NavMenu />
-    </div>
 
-    <main>
+    <div class="d-flex flex-column min-vh-100">
 
-        <div class="top-row px-4">
-            <h4>JWT Authentication Demo</h4>
-        </div>
 
-        <article class="content px-4">
+        <nav class="navbar navbar-expand navbar-dark bg-dark px-3 shadow-sm">
+
+
+            <NavLink class="navbar-brand fw-bold me-4"
+                     href="/">
+
+                🌐 AtmoSync ArgoAi
+
+            </NavLink>
+
+
+
+            <div class="navbar-nav me-auto">
+
+
+                <NavLink class="nav-link text-white me-3"
+                         href="/"
+                         Match="NavLinkMatch.All">
+
+                    Dashboard
+
+                </NavLink>
+
+
+
+                <AuthorizeView Roles="Admin">
+
+
+                    <Authorized>
+
+
+                        <NavLink class="nav-link text-white me-3"
+                                 href="/mq136">
+
+                            🟢 MQ136 Sensor
+
+                        </NavLink>
+
+
+                    </Authorized>
+
+
+                </AuthorizeView>
+
+
+            </div>
+
+
+
+
+            <div class="d-flex align-items-center">
+
+
+                <AuthorizeView>
+
+
+                    <Authorized>
+
+
+                        <span class="text-white me-3">
+
+                            Hello @context.User.Identity?.Name
+
+                        </span>
+
+
+
+                        <button class="btn btn-danger btn-sm">
+                            Logout
+                        </button>
+
+
+                    </Authorized>
+
+
+
+                    <NotAuthorized>
+
+
+                        <NavLink class="btn btn-outline-light btn-sm me-2"
+                                 href="/login">
+
+                            Login
+
+                        </NavLink>
+
+
+
+                        <NavLink class="btn btn-primary btn-sm"
+                                 href="/register">
+
+                            Register
+
+                        </NavLink>
+
+
+                    </NotAuthorized>
+
+
+                </AuthorizeView>
+
+
+            </div>
+
+
+
+        </nav>
+
+
+
+
+        <main class="flex-grow-1">
+
             @Body
-        </article>
 
-    </main>
+        </main>
+
+
+
+
+        <footer class="bg-dark text-white text-center py-2 small">
+
+            © 2026 AtmoSync ArgoAi • IoT Monitoring Platform • Fahad
+
+        </footer>
+
+
+
+    </div>
 
 </div>
