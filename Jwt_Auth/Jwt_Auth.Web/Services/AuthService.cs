@@ -19,6 +19,12 @@ namespace Jwt_Auth.Web.Services
             _tokenService = tokenService;
             _authProvider = authProvider;
         }
+        public async Task<bool> Register(UserDto user)
+        {
+            var response = await _http.PostAsJsonAsync("api/Auth/register",user);
+
+            return response.IsSuccessStatusCode;
+        }
 
         public async Task<bool> Login(UserDto dto)
         {
