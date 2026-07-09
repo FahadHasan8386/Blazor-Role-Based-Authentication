@@ -15,6 +15,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// CORS 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("BlazorPolicy",
+        policy =>
+        {
+            policy
+            .WithOrigins("https://localhost:7068")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+        });
+});
 // Database
 builder.Services.AddDbContext<UserDbContext>(options =>options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
@@ -50,6 +62,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("BlazorPolicy");
 
 // Authentication
 app.UseAuthentication();
