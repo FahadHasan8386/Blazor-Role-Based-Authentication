@@ -1,6 +1,6 @@
 ﻿@page "/login"
-@using Jwt_Auth.Shared.Models
 @using Jwt_Auth.Web.Services
+@using Jwt_Auth.Shared.Models
 @inject AuthService AuthService
 
 @inject NavigationManager Navigation
@@ -8,7 +8,7 @@
 
 <h3>Login</h3>
 
-<EditForm Model="model" OnValidSubmit="Login">
+<EditForm Model="model" OnValidSubmit="HandleLogin">
 
     <DataAnnotationsValidator />
 
@@ -48,7 +48,7 @@
 
     private string error = "";
 
-    private async Task Login()
+    private async Task HandleLogin()
     {
         var result = await AuthService.Login(model);
 

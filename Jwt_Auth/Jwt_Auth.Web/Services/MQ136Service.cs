@@ -1,5 +1,4 @@
 ﻿using Jwt_Auth.Shared.Models;
-using Jwt_Auth.Web.Pages;
 using System.Net.Http.Json;
 
 namespace Jwt_Auth.Web.Services
@@ -10,26 +9,32 @@ namespace Jwt_Auth.Web.Services
 
         public MQ136Service(HttpClient http)
         {
-            _http = http;   
+            _http = http;
         }
 
-        public async Task<List<MQ136Sensor>> GetAllAsync()
+
+        public async Task<IEnumerable<MQ136Sensor>> GetAllAsync()
         {
-            var result = await _http.GetFromJsonAsync<List<MQ136Sensor>>("api/MQ136Sensor");
+            var result = await _http
+                .GetFromJsonAsync<IEnumerable<MQ136Sensor>>("api/MQ136Sensor");
 
-            return result ?? new List<MQ136Sensor>();
+            return result ?? Enumerable.Empty<MQ136Sensor>();
         }
-             
+
+
         public async Task<bool> AddAsync(MQ136SensorDto dto)
         {
-            var response = await _http.PostAsJsonAsync("api/MQ136Sensor", dto);
+            var response =
+                await _http.PostAsJsonAsync("api/MQ136Sensor", dto);
 
             return response.IsSuccessStatusCode;
         }
 
+
         public async Task<bool> DeleteAsync(long id)
         {
-            var response = await _http.DeleteAsync($"api/MQ136Sensor/{id}");
+            var response =
+                await _http.DeleteAsync($"api/MQ136Sensor/{id}");
 
             return response.IsSuccessStatusCode;
         }

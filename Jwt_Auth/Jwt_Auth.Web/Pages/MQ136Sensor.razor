@@ -2,15 +2,19 @@
 
 @using Jwt_Auth.Web.Services
 @using Jwt_Auth.Shared.Models
+@using SensorModel = Jwt_Auth.Shared.Models.MQ136Sensor
+@using DtoModel = Jwt_Auth.Shared.Models.MQ136SensorDto
 @using Microsoft.AspNetCore.Authorization
 
 @attribute [Authorize(Roles = "Admin")]
 
 @inject MQ136Service MQ136Service
 
+
 <h3>MQ136 Sensor Dashboard</h3>
 
 <hr />
+
 
 <div class="card p-3 mb-3">
 
@@ -25,6 +29,7 @@
 
     </div>
 
+
     <button class="btn btn-success"
             @onclick="Save">
         Add
@@ -32,12 +37,15 @@
 
 </div>
 
-@if (sensors == null)
+
+
+@if (sensors.Count == 0)
 {
-    <p>Loading...</p>
+    <p>No data found</p>
 }
 else
 {
+
     <table class="table table-striped">
 
         <thead>
@@ -54,6 +62,7 @@ else
 
         </thead>
 
+
         <tbody>
 
             @foreach (var item in sensors)
@@ -63,6 +72,7 @@ else
                     <td>@item.Id</td>
 
                     <td>@item.H2SLevel</td>
+
 
                     <td>
 
@@ -76,30 +86,42 @@ else
                 </tr>
             }
 
+
         </tbody>
 
+
     </table>
+
 }
+
+
 
 @code {
 
-    private List<MQ136Sensor> sensors = new();
+    private List<SensorModel> sensors = new();
 
-    private MQ136SensorDto sensorDto = new();
+    private DtoModel sensorDto = new();
+
 
     protected override async Task OnInitializedAsync()
     {
         await LoadData();
     }
 
+
+
     private async Task LoadData()
     {
-        sensors = await MQ136Service.GetAllAsync();
+        sensors = (await MQ136Service.GetAllAsync()).ToList();
     }
+
+
 
     private async Task Save()
     {
+
         var success = await MQ136Service.AddAsync(sensorDto);
+
 
         if (success)
         {
@@ -107,16 +129,22 @@ else
 
             await LoadData();
         }
+
     }
+
+
 
     private async Task Delete(long id)
     {
+
         var success = await MQ136Service.DeleteAsync(id);
+
 
         if (success)
         {
             await LoadData();
         }
+
     }
 
 }
