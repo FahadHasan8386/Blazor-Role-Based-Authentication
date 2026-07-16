@@ -20,4 +20,8 @@
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\AtmoSync.AI\AtmoSync.AI.csproj" />
+	</ItemGroup>
+
 </Project>

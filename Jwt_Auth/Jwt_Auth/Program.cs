@@ -1,3 +1,4 @@
+using AtmoSync.AI;
 using Jwt_Auth.Data;
 using Jwt_Auth.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -52,6 +53,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Dependency Injection
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IMQ136SensorService, MQ136SensorService>();
+builder.Services.AddSingleton<IAirQualityPredictor, DemoAirQualityPredictor>();
 
 var app = builder.Build();
 

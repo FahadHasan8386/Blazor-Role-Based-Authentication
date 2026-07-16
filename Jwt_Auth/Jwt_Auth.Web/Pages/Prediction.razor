@@ -1,0 +1,88 @@
+@page "/prediction"
+
+@using Jwt_Auth.Web.Services
+@using Microsoft.AspNetCore.Authorization
+
+
+
+@inject PredictionService PredictionService
+
+<PageTitle>Air Quality Prediction</PageTitle>
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h3 class="mb-3">Air Quality Prediction</h3>
+                    <p class="text-muted">Estimate the air-quality index from temperature and humidity using the demo prediction model.</p>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Temperature (°C)</label>
+                            <InputNumber class="form-control" @bind-Value="Temperature" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Humidity (%)</label>
+                            <InputNumber class="form-control" @bind-Value="Humidity" />
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary mt-4" @onclick="RunPrediction" disabled="@IsLoading">
+                        @if (IsLoading)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2"></span>
+                        }
+                        Predict
+                    </button>
+
+                    @if (!string.IsNullOrEmpty(ErrorMessage))
+                    {
+                        <div class="alert alert-danger mt-3">@ErrorMessage</div>
+                    }
+
+                    @if (Result is not null)
+                    {
+                        <div class="alert alert-info mt-3">
+                            <h5 class="mb-2">Prediction result</h5>
+                            <p class="mb-1"><strong>Predicted AQI:</strong> @Result.PredictedAirQualityIndex</p>
+                            <p class="mb-1"><strong>Risk level:</strong> @Result.RiskLevel</p>
+                            <p class="mb-0"><strong>Input:</strong> @Result.Temperature°C, @Result.Humidity%</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private double Temperature { get; set; } = 25;
+    private double Humidity { get; set; } = 55;
+    private bool IsLoading;
+    private string ErrorMessage = string.Empty;
+    private PredictionResponse? Result;
+
+    private async Task RunPrediction()
+    {
+        try
+        {
+            IsLoading = true;
+            ErrorMessage = string.Empty;
+            Result = await PredictionService.PredictAsync(Temperature, Humidity);
+
+            if (Result is null)
+            {
+                ErrorMessage = "Prediction failed. Please try again.";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+}

@@ -48,6 +48,7 @@ builder.Services.AddScoped(sp =>
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<MQ136Service>();
+builder.Services.AddScoped<PredictionService>();
 
 
 await builder.Build().RunAsync();
